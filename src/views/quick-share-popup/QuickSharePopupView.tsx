@@ -1,7 +1,7 @@
 import { useActiveTab } from "@/hooks/use-active-tab";
 import { useApp } from "@/hooks/use-app";
 import type { TFile } from "obsidian";
-import { Notice } from "obsidian";
+import { Notice, MarkdownView } from "obsidian";
 import { useEffect, useState } from "react";
 import ShareInfo from "@/components/ShareInfo";
 import { useSettings } from "@/context/SettingsContext";
@@ -46,6 +46,23 @@ export const QuickSharePopupView = ({
 
     (async () => {
       try {
+        // Prefer editor buffer (unsaved changes) if the active view is a MarkdownView
+        const activeView = app.workspace.getActiveViewOfType(MarkdownView);
+        if (activeView && activeView.file?.path === activeFile.path) {
+          const editorText = activeView.editor.getValue();
+          if (!mounted) return;
+          setContent(editorText);
+          console.log(
+            "QuickSharePopupView - file name (editor)",
+            activeFile.basename
+          );
+          console.log(
+            "QuickSharePopupView - file content (editor)",
+            editorText
+          );
+          return;
+        }
+
         const text = await app.vault.read(activeFile);
         if (!mounted) return;
         setContent(text);

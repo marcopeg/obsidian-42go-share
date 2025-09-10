@@ -2,7 +2,7 @@ import { Plugin, PluginSettingTab, Setting } from "obsidian";
 import { QuickShareModal } from "@/views/quick-share-popup/wrapper";
 import { DEFAULT_SETTINGS } from "@/context/SettingsContext";
 
-const CRM_ICON = "anchor";
+const CRM_ICON = "share";
 
 interface QuickShareSettings {
   backendEndpoint: string;
