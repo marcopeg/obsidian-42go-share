@@ -160,8 +160,8 @@ export const QuickSharePopupView = ({
 
   return (
     <div className="pt-2 px-4 pb-4">
-      <h2 className="text-2xl text-primary mt-0">Quick Share</h2>
-      <p className="mt-2">File: {activeFile.basename}</p>
+      <h2 className="text-2xl text-primary mt-0">QuickShare</h2>
+      {/* <p className="mt-2">File: {activeFile.basename}</p> */}
       <hr className="my-3 border-neutral-700" />
 
       <ShareInfo
