@@ -6,9 +6,11 @@ import QuickSharePopupView from "./QuickSharePopupView";
 
 export class QuickShareModal extends Modal {
   private root: Root | null = null;
+  private settings: any;
 
-  constructor(app: App) {
+  constructor(app: App, settings?: any) {
     super(app);
+    this.settings = settings;
   }
 
   onOpen() {
@@ -17,7 +19,7 @@ export class QuickShareModal extends Modal {
 
     this.root = createRoot(contentEl);
     this.root.render(
-      <AppProvider app={this.app}>
+      <AppProvider app={this.app} settings={this.settings}>
         <QuickSharePopupView />
       </AppProvider>
     );

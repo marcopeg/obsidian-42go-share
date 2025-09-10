@@ -4,6 +4,7 @@ import type { TFile } from "obsidian";
 import { Notice } from "obsidian";
 import { useEffect, useState } from "react";
 import ShareInfo from "@/components/ShareInfo";
+import { useSettings } from "@/context/SettingsContext";
 
 interface Props {
   file?: TFile | null;
@@ -16,6 +17,7 @@ export const QuickSharePopupView = ({
 }: Props) => {
   const tab = useActiveTab();
   const app = useApp();
+  const settings = useSettings();
   const [content, setContent] = useState<string | null>(propContent ?? null);
 
   // Prefer the active tab's file, otherwise fall back to prop
@@ -111,7 +113,8 @@ export const QuickSharePopupView = ({
           title: activeFile.basename,
           body: content,
         });
-        const res = await fetch("http://notes.localhost:3000/api/notes", {
+        const base = settings.backendEndpoint.replace(/\/$/, "");
+        const res = await fetch(`${base}/api/notes`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body,
@@ -122,7 +125,7 @@ export const QuickSharePopupView = ({
           throw new Error(`HTTP ${res.status}: ${text}`);
         }
         const data: { bucket: string; uuid: string } = await res.json();
-        const url = `http://notes.localhost:3000/notes/${data.bucket}/${data.uuid}`;
+        const url = `${base}/notes/${data.bucket}/${data.uuid}`;
         setResultUrl(url);
         console.log("QuickSharePopupView - created note url", url);
       } catch (e: any) {
