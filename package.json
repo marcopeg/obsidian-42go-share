@@ -1,6 +1,6 @@
 {
   "name": "obsidian-quick-share",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "QuickShare plugin for Obsidian - share a note with a temporary public link",
   "license": "MIT",
   "author": "Marco Pegoraro",
