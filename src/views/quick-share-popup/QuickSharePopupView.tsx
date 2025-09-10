@@ -1,0 +1,158 @@
+import { useActiveTab } from "@/hooks/use-active-tab";
+import { useApp } from "@/hooks/use-app";
+import type { TFile } from "obsidian";
+import { Notice } from "obsidian";
+import { useEffect, useState } from "react";
+import ShareInfo from "@/components/ShareInfo";
+
+interface Props {
+  file?: TFile | null;
+  content?: string | null;
+}
+
+export const QuickSharePopupView = ({
+  file: propFile,
+  content: propContent,
+}: Props) => {
+  const tab = useActiveTab();
+  const app = useApp();
+  const [content, setContent] = useState<string | null>(propContent ?? null);
+
+  // Prefer the active tab's file, otherwise fall back to prop
+  const activeFile: TFile | null = tab.file ?? propFile ?? null;
+
+  useEffect(() => {
+    let mounted = true;
+
+    if (!activeFile) {
+      setContent(null);
+      console.log("QuickSharePopupView - not a file");
+      return () => {
+        mounted = false;
+      };
+    }
+
+    // If content was passed in via props, prefer it; otherwise read from vault
+    if (propContent != null) {
+      setContent(propContent);
+      console.log("QuickSharePopupView - file name", activeFile.basename);
+      console.log("QuickSharePopupView - file content", propContent);
+      return () => {
+        mounted = false;
+      };
+    }
+
+    (async () => {
+      try {
+        const text = await app.vault.read(activeFile);
+        if (!mounted) return;
+        setContent(text);
+        console.log("QuickSharePopupView - file name", activeFile.basename);
+        console.log("QuickSharePopupView - file content", text);
+      } catch (e) {
+        console.error("QuickSharePopupView: failed to read file", e);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [app, activeFile?.path, propContent]);
+
+  if (!activeFile) {
+    return (
+      <div className="p-4">
+        <h2 className="text-2xl text-primary">Quick Share</h2>
+        <p className="mt-2">First open a note, then click the share button!</p>
+      </div>
+    );
+  }
+
+  // POST result state
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [resultUrl, setResultUrl] = useState<string | null>(null);
+  const [autoCopied, setAutoCopied] = useState(false);
+
+  // Auto-copy URL and show a Notice once resultUrl is available and loading finished
+  useEffect(() => {
+    let mounted = true;
+    if (!resultUrl || loading || autoCopied) return;
+
+    (async () => {
+      try {
+        await navigator.clipboard.writeText(resultUrl);
+        if (!mounted) return;
+        // Show Obsidian notice
+        new Notice("Share link copied to clipboard");
+        setAutoCopied(true);
+        console.log("QuickSharePopupView - auto-copied share URL", resultUrl);
+      } catch (e) {
+        console.error("QuickSharePopupView: auto-copy failed", e);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [resultUrl, loading, autoCopied]);
+
+  useEffect(() => {
+    let mounted = true;
+
+    // Only attempt when we have content and haven't already generated a URL
+    if (!activeFile || content == null || resultUrl || loading) return;
+
+    (async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const body = JSON.stringify({
+          title: activeFile.basename,
+          body: content,
+        });
+        const res = await fetch("http://notes.localhost:3000/api/notes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body,
+        });
+        if (!mounted) return;
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(`HTTP ${res.status}: ${text}`);
+        }
+        const data: { bucket: string; uuid: string } = await res.json();
+        const url = `http://notes.localhost:3000/notes/${data.bucket}/${data.uuid}`;
+        setResultUrl(url);
+        console.log("QuickSharePopupView - created note url", url);
+      } catch (e: any) {
+        console.error("QuickSharePopupView: failed to create note", e);
+        setError(e?.message ?? String(e));
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [activeFile, content, resultUrl]);
+
+  return (
+    <div className="pt-2 px-4 pb-4">
+      <h2 className="text-2xl text-primary mt-0">Quick Share</h2>
+      <p className="mt-2">File: {activeFile.basename}</p>
+      <hr className="my-3 border-neutral-700" />
+
+      <ShareInfo
+        fileName={activeFile.basename}
+        filePath={activeFile.path}
+        isLoading={loading}
+        shareUrl={resultUrl}
+        errorMsg={error}
+      />
+    </div>
+  );
+};
+
+export default QuickSharePopupView;

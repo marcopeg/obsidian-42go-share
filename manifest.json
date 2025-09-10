@@ -1,0 +1,11 @@
+{
+  "id": "quick-share",
+  "name": "QuickShare",
+  "version": "0.0.1",
+  "minAppVersion": "0.15.0",
+  "description": "Quickly share notes via a public link.",
+  "author": "Marco Pegoraro",
+  "authorUrl": "https://marcopeg.com",
+  "fundingUrl": "https://obsidian.md/pricing",
+  "isDesktopOnly": false
+}
