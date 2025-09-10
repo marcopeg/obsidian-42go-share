@@ -1,14 +1,12 @@
 {
   "name": "obsidian-quick-share",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "QuickShare plugin for Obsidian - share a note with a temporary public link",
-  "main": "src/main.ts",
-  "scripts": {
-    "dev": "concurrently \"node esbuild.config.mjs\" \"npx tailwindcss -i src/styles.css -o styles.css --watch --config tailwind.config.cjs\"",
-    "build": "npx tailwindcss -i src/styles.css -o styles.css --config tailwind.config.cjs --minify && tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-    "version": "node version-bump.mjs && git add manifest.json versions.json",
-    "tag:push": "git tag v$(node -p \"require('./package.json').version\") && git push origin v$(node -p \"require('./package.json').version\")",
-    "tag:prune": "git tag -d v$(node -p \"require('./package.json').version\") && git push --delete origin v$(node -p \"require('./package.json').version\") || true"
+  "license": "MIT",
+  "author": "Marco Pegoraro",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marcopeg/obsidian-quick-share"
   },
   "keywords": [
     "obsidian",
@@ -17,8 +15,14 @@
     "share",
     "link"
   ],
-  "author": "Marco Pegoraro",
-  "license": "MIT",
+  "main": "src/main.ts",
+  "scripts": {
+    "dev": "concurrently \"node esbuild.config.mjs\" \"npx tailwindcss -i src/styles.css -o styles.css --watch --config tailwind.config.cjs\"",
+    "build": "npx tailwindcss -i src/styles.css -o styles.css --config tailwind.config.cjs --minify && tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "version": "node version-bump.mjs && git add manifest.json versions.json",
+    "tag:push": "git tag v$(node -p \"require('./package.json').version\") && git push origin v$(node -p \"require('./package.json').version\")",
+    "tag:prune": "git tag -d v$(node -p \"require('./package.json').version\") && git push --delete origin v$(node -p \"require('./package.json').version\") || true"
+  },
   "devDependencies": {
     "@types/node": "^16.11.6",
     "@types/react": "^19.1.12",
