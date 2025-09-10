@@ -1,4 +1,4 @@
-import { Plugin } from "obsidian";
+import { Plugin, TFile } from "obsidian";
 import { QuickShareModal } from "@/views/quick-share-popup/wrapper";
 import { DEFAULT_SETTINGS } from "@/context/SettingsContext";
 import { QuickShareSettingTab } from "@/views/quick-share-settings/QuickShareSettingTab";
@@ -24,12 +24,27 @@ export default class CRM extends Plugin {
 
     this.addCommand({
       id: "quick-share--share-note",
-      name: "Quick Share Note",
+      name: "Share Note",
       hotkeys: [{ modifiers: ["Mod", "Shift"], key: "s" }], // Cmd/Ctrl+Shift+M (user can change later)
       callback: () => {
         new QuickShareModal(this.app, this.settings).open();
       },
     });
+
+    // Add context menu item for files in the file explorer / note tabs
+    this.registerEvent(
+      this.app.workspace.on("file-menu", (menu, file) => {
+        // Only add for files (not folders)
+        if (!(file instanceof TFile)) return;
+        menu.addItem((item) => {
+          item.setTitle("Share note");
+          item.setIcon("share");
+          item.onClick(() => {
+            new QuickShareModal(this.app, this.settings, file as TFile).open();
+          });
+        });
+      })
+    );
 
     this.addSettingTab(new QuickShareSettingTab(this.app, this));
   }
