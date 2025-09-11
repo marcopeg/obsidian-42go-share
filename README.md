@@ -1,12 +1,12 @@
-# Obsidian 42GoShare Plugin
+# 42GoShare Plugin for Obsidian
 
-42GoShare plugin for Obsidian - share a note with a ephimeral public link.
+Share a note with an ephimeral public link.
 
 ## Usage
 
-* Chose "Share note" from any note's contextual menu
-* it the shortcut "Shift+Cmd+s" to share the note and open the popup with the note's link.
-* type "Share note" in the _Command Palette_.
+- Chose "Share note" from any note's contextual menu
+- it the shortcut "Shift+Cmd+s" to share the note and open the popup with the note's link.
+- type "Share note" in the _Command Palette_.
 
 ## Be Careful What You Share!
 

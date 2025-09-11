@@ -1,11 +1,11 @@
 {
-	"id": "obsidian-42go-share",
-	"name": "42GoShare",
-	"version": "1.0.0",
-	"minAppVersion": "0.15.0",
-	"description": "Quickly share notes via an ephemeral public link.",
-	"author": "Marco Pegoraro",
-	"authorUrl": "https://marcopeg.com",
-	"fundingUrl": "https://marcopeg.com/donate",
-	"isDesktopOnly": false
+  "id": "42go-share",
+  "name": "42GoShare",
+  "version": "1.0.0",
+  "minAppVersion": "0.15.0",
+  "description": "Share notes via an ephemeral public link.",
+  "author": "Marco Pegoraro",
+  "authorUrl": "https://marcopeg.com",
+  "fundingUrl": "https://marcopeg.com/donate",
+  "isDesktopOnly": false
 }
