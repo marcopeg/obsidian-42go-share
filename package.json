@@ -1,19 +1,19 @@
 {
   "name": "obsidian-42go-share",
-  "version": "0.0.2",
-  "description": "QuickShare plugin for Obsidian - share a note with a temporary public link",
+  "version": "0.0.0",
+  "description": "42GoShare plugin for Obsidian - share a note with an ephemeral public link",
   "license": "MIT",
   "author": "Marco Pegoraro",
   "repository": {
     "type": "git",
-    "url": "https://github.com/marcopeg/obsidian-quick-share"
+    "url": "https://github.com/marcopeg/obsidian-42go-share"
   },
   "keywords": [
     "obsidian",
     "plugin",
-    "quickshare",
     "share",
-    "link"
+    "link",
+    "402go"
   ],
   "main": "src/main.ts",
   "scripts": {

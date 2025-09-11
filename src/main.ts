@@ -1,7 +1,7 @@
 import { Plugin, TFile } from "obsidian";
-import { QuickShareModal } from "@/views/quick-share-popup/wrapper";
+import { QuickShareModal } from "@/views/share-popup/wrapper";
 import { DEFAULT_SETTINGS } from "@/context/SettingsContext";
-import { QuickShareSettingTab } from "@/views/quick-share-settings/QuickShareSettingTab";
+import { ShareSettingTab } from "@/views/share-settings/ShareSettingTab";
 
 const CRM_ICON = "share";
 
@@ -46,7 +46,7 @@ export default class CRM extends Plugin {
       })
     );
 
-    this.addSettingTab(new QuickShareSettingTab(this.app, this));
+    this.addSettingTab(new ShareSettingTab(this.app, this));
   }
 
   async loadSettings() {

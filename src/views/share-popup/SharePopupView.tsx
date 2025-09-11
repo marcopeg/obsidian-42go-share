@@ -11,7 +11,7 @@ interface Props {
   content?: string | null;
 }
 
-export const QuickSharePopupView = ({
+export const SharePopupView = ({
   file: propFile,
   content: propContent,
 }: Props) => {
@@ -28,7 +28,7 @@ export const QuickSharePopupView = ({
 
     if (!activeFile) {
       setContent(null);
-      console.log("QuickSharePopupView - not a file");
+      console.log("[42GoShare] PopupView - not a file");
       return () => {
         mounted = false;
       };
@@ -37,8 +37,8 @@ export const QuickSharePopupView = ({
     // If content was passed in via props, prefer it; otherwise read from vault
     if (propContent != null) {
       setContent(propContent);
-      console.log("QuickSharePopupView - file name", activeFile.basename);
-      console.log("QuickSharePopupView - file content", propContent);
+      console.log("[42GoShare] PopupView - file name", activeFile.basename);
+      console.log("[42GoShare] PopupView - file content", propContent);
       return () => {
         mounted = false;
       };
@@ -53,11 +53,11 @@ export const QuickSharePopupView = ({
           if (!mounted) return;
           setContent(editorText);
           console.log(
-            "QuickSharePopupView - file name (editor)",
+            "[42GoShare] PopupView - file name (editor)",
             activeFile.basename
           );
           console.log(
-            "QuickSharePopupView - file content (editor)",
+            "[42GoShare] PopupView - file content (editor)",
             editorText
           );
           return;
@@ -66,10 +66,10 @@ export const QuickSharePopupView = ({
         const text = await app.vault.read(activeFile);
         if (!mounted) return;
         setContent(text);
-        console.log("QuickSharePopupView - file name", activeFile.basename);
-        console.log("QuickSharePopupView - file content", text);
+        console.log("[42GoShare] PopupView - file name", activeFile.basename);
+        console.log("[42GoShare] PopupView - file content", text);
       } catch (e) {
-        console.error("QuickSharePopupView: failed to read file", e);
+        console.error("[42GoShare] PopupView: failed to read file", e);
       }
     })();
 
@@ -105,9 +105,8 @@ export const QuickSharePopupView = ({
         // Show Obsidian notice
         new Notice("Share link copied to clipboard");
         setAutoCopied(true);
-        console.log("QuickSharePopupView - auto-copied share URL", resultUrl);
       } catch (e) {
-        console.error("QuickSharePopupView: auto-copy failed", e);
+        console.error("[42GoShare] PopupView: auto-copy failed", e);
       }
     })();
 
@@ -144,9 +143,9 @@ export const QuickSharePopupView = ({
         const data: { bucket: string; uuid: string } = await res.json();
         const url = `${base}/notes/${data.bucket}/${data.uuid}`;
         setResultUrl(url);
-        console.log("QuickSharePopupView - created note url", url);
+        console.log("[42GoShare] PopupView - created note url", url);
       } catch (e: any) {
-        console.error("QuickSharePopupView: failed to create note", e);
+        console.error("[42GoShare] PopupView: failed to create note", e);
         setError(e?.message ?? String(e));
       } finally {
         if (mounted) setLoading(false);
@@ -160,7 +159,7 @@ export const QuickSharePopupView = ({
 
   return (
     <div className="pt-2 px-4 pb-4">
-      <h2 className="text-2xl text-primary mt-0">QuickShare</h2>
+      <h2 className="text-xl text-primary mt-0">Share Note</h2>
       {/* <p className="mt-2">File: {activeFile.basename}</p> */}
       <hr className="my-3 border-neutral-700" />
 
@@ -174,5 +173,3 @@ export const QuickSharePopupView = ({
     </div>
   );
 };
-
-export default QuickSharePopupView;

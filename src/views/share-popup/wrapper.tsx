@@ -1,8 +1,7 @@
 import { App, Modal, TFile } from "obsidian";
-import React from "react";
 import { createRoot, Root } from "react-dom/client";
 import { AppProvider } from "@/context/AppProvider";
-import QuickSharePopupView from "./QuickSharePopupView";
+import { SharePopupView } from "./SharePopupView";
 
 export class QuickShareModal extends Modal {
   private root: Root | null = null;
@@ -22,7 +21,7 @@ export class QuickShareModal extends Modal {
     this.root = createRoot(contentEl);
     this.root.render(
       <AppProvider app={this.app} settings={this.settings}>
-        <QuickSharePopupView file={this.file} />
+        <SharePopupView file={this.file} />
       </AppProvider>
     );
   }
