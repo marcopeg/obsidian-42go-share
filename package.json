@@ -1,6 +1,6 @@
 {
   "name": "obsidian-42go-share",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "42GoShare plugin for Obsidian - share a note with an ephemeral public link",
   "license": "MIT",
   "author": "Marco Pegoraro",
