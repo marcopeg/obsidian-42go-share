@@ -9,13 +9,10 @@ interface QuickShareSettings {
   backendEndpoint: string;
 }
 
-export default class CRM extends Plugin {
+export default class QuickSharePlugin extends Plugin {
   settings: QuickShareSettings = DEFAULT_SETTINGS;
 
   async onload() {
-    console.clear();
-    console.log("QuickShare: Loading plugin");
-
     await this.loadSettings();
 
     this.addRibbonIcon(CRM_ICON, "Quick Share Note", () =>
@@ -25,7 +22,6 @@ export default class CRM extends Plugin {
     this.addCommand({
       id: "quick-share--share-note",
       name: "Share Note",
-      hotkeys: [{ modifiers: ["Mod", "Shift"], key: "s" }], // Cmd/Ctrl+Shift+M (user can change later)
       callback: () => {
         new QuickShareModal(this.app, this.settings).open();
       },
@@ -40,7 +36,7 @@ export default class CRM extends Plugin {
           item.setTitle("Share note");
           item.setIcon("share");
           item.onClick(() => {
-            new QuickShareModal(this.app, this.settings, file as TFile).open();
+            new QuickShareModal(this.app, this.settings, file).open();
           });
         });
       })
