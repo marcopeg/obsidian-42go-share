@@ -4,10 +4,7 @@ import { DEFAULT_SETTINGS } from "@/context/SettingsContext";
 import { ShareSettingTab } from "@/views/share-settings/ShareSettingTab";
 
 const CRM_ICON = "share";
-
-interface QuickShareSettings {
-  backendEndpoint: string;
-}
+type QuickShareSettings = typeof DEFAULT_SETTINGS;
 
 export default class QuickSharePlugin extends Plugin {
   settings: QuickShareSettings = DEFAULT_SETTINGS;

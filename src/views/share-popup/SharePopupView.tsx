@@ -130,8 +130,9 @@ export const SharePopupView = ({
         const data: { bucket: string; uuid: string } = await res.json();
         const url = `${base}/notes/${data.bucket}/${data.uuid}`;
         setResultUrl(url);
-      } catch (e: any) {
-        setError(e?.message ?? String(e));
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        setError(msg);
       } finally {
         if (mounted) setLoading(false);
       }

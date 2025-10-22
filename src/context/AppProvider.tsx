@@ -5,7 +5,7 @@ import { SettingsProvider, DEFAULT_SETTINGS } from "./SettingsContext";
 export const AppContext = createContext<App | undefined>(undefined);
 
 interface AppProviderProps
-  extends PropsWithChildren<{ app: App; settings?: any }> {}
+  extends PropsWithChildren<{ app: App; settings?: typeof DEFAULT_SETTINGS }> {}
 
 export const AppProvider = ({ app, settings, children }: AppProviderProps) => (
   <AppContext.Provider value={app}>
