@@ -1,3 +1,4 @@
+import { Notice } from "obsidian";
 import { Icon } from "@/components/Icon";
 
 interface Props {
@@ -18,7 +19,7 @@ export const ShareInfo = ({
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      console.log("Copied to clipboard:", text);
+      new Notice("Share link copied to clipboard");
     } catch (e) {
       console.error("Copy failed", e);
     }

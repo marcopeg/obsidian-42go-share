@@ -1,11 +1,11 @@
-import { PluginSettingTab, Setting } from "obsidian";
-import type CRM from "@/main";
+import { App, PluginSettingTab, Setting } from "obsidian";
+import type QuickSharePlugin from "@/main";
 import { DEFAULT_SETTINGS } from "@/context/SettingsContext";
 
 export class ShareSettingTab extends PluginSettingTab {
-  plugin: CRM;
+  plugin: QuickSharePlugin;
 
-  constructor(app: any, plugin: CRM) {
+  constructor(app: App, plugin: QuickSharePlugin) {
     super(app, plugin);
     this.plugin = plugin;
   }
@@ -17,11 +17,11 @@ export class ShareSettingTab extends PluginSettingTab {
     new Setting(containerEl).setName("Server URL:").addText((text) =>
       text
         .setPlaceholder(DEFAULT_SETTINGS.backendEndpoint)
-        .setValue((this.plugin as any).settings.backendEndpoint)
+        .setValue(this.plugin.settings.backendEndpoint)
         .onChange(async (value) => {
-          (this.plugin as any).settings.backendEndpoint =
+          this.plugin.settings.backendEndpoint =
             value || DEFAULT_SETTINGS.backendEndpoint;
-          await (this.plugin as any).saveSettings();
+          await this.plugin.saveSettings();
         })
     );
   }

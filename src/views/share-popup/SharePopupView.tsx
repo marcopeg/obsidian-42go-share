@@ -28,7 +28,6 @@ export const SharePopupView = ({
 
     if (!activeFile) {
       setContent(null);
-      console.log("[42GoShare] PopupView - not a file");
       return () => {
         mounted = false;
       };
@@ -37,8 +36,6 @@ export const SharePopupView = ({
     // If content was passed in via props, prefer it; otherwise read from vault
     if (propContent != null) {
       setContent(propContent);
-      console.log("[42GoShare] PopupView - file name", activeFile.basename);
-      console.log("[42GoShare] PopupView - file content", propContent);
       return () => {
         mounted = false;
       };
@@ -52,24 +49,14 @@ export const SharePopupView = ({
           const editorText = activeView.editor.getValue();
           if (!mounted) return;
           setContent(editorText);
-          console.log(
-            "[42GoShare] PopupView - file name (editor)",
-            activeFile.basename
-          );
-          console.log(
-            "[42GoShare] PopupView - file content (editor)",
-            editorText
-          );
           return;
         }
 
         const text = await app.vault.read(activeFile);
         if (!mounted) return;
         setContent(text);
-        console.log("[42GoShare] PopupView - file name", activeFile.basename);
-        console.log("[42GoShare] PopupView - file content", text);
       } catch (e) {
-        console.error("[42GoShare] PopupView: failed to read file", e);
+        new Notice("Unable to read the current note");
       }
     })();
 
@@ -106,7 +93,7 @@ export const SharePopupView = ({
         new Notice("Share link copied to clipboard");
         setAutoCopied(true);
       } catch (e) {
-        console.error("[42GoShare] PopupView: auto-copy failed", e);
+        new Notice("Failed to copy the share link to the clipboard");
       }
     })();
 
@@ -143,10 +130,9 @@ export const SharePopupView = ({
         const data: { bucket: string; uuid: string } = await res.json();
         const url = `${base}/notes/${data.bucket}/${data.uuid}`;
         setResultUrl(url);
-        console.log("[42GoShare] PopupView - created note url", url);
-      } catch (e: any) {
-        console.error("[42GoShare] PopupView: failed to create note", e);
-        setError(e?.message ?? String(e));
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        setError(msg);
       } finally {
         if (mounted) setLoading(false);
       }

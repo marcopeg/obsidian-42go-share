@@ -2,15 +2,16 @@ import { App, Modal, TFile } from "obsidian";
 import { createRoot, Root } from "react-dom/client";
 import { AppProvider } from "@/context/AppProvider";
 import { SharePopupView } from "./SharePopupView";
+import { DEFAULT_SETTINGS } from "@/context/SettingsContext";
 
 export class QuickShareModal extends Modal {
   private root: Root | null = null;
-  private settings: any;
+  private settings: typeof DEFAULT_SETTINGS;
   private file: TFile | null = null;
 
-  constructor(app: App, settings?: any, file?: TFile | null) {
+  constructor(app: App, settings?: typeof DEFAULT_SETTINGS, file?: TFile | null) {
     super(app);
-    this.settings = settings;
+    this.settings = settings ?? DEFAULT_SETTINGS;
     this.file = file ?? null;
   }
 
