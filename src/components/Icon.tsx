@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { setIcon } from "obsidian";
 
-type IconSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | string | number;
+type IconSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | number;
 
 export const Icon = ({
   name,
@@ -36,8 +36,7 @@ export const Icon = ({
             case "2xl":
               return "w-10 h-10";
             default:
-              // allow passing a custom Tailwind size class like "w-6 h-6"
-              return size || undefined;
+              return undefined;
           }
         })()
       : undefined;

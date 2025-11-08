@@ -25,7 +25,6 @@ export function useFiles(type: string, options?: UseFilesOptions) {
           return options.filter(f, app);
         } catch (e) {
           // If user filter throws, exclude the file and don't break the hook
-          // eslint-disable-next-line no-console
           console.error("useFiles filter error:", e);
           return false;
         }
