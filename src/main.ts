@@ -12,13 +12,13 @@ export default class QuickSharePlugin extends Plugin {
   async onload() {
     await this.loadSettings();
 
-    this.addRibbonIcon(CRM_ICON, "Quick Share Note", () =>
+    this.addRibbonIcon(CRM_ICON, "Quick share note", () =>
       new QuickShareModal(this.app, this.settings).open()
     );
 
     this.addCommand({
       id: "quick-share--share-note",
-      name: "Share Note",
+      name: "Share note",
       callback: () => {
         new QuickShareModal(this.app, this.settings).open();
       },

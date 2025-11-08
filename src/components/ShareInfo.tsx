@@ -122,7 +122,9 @@ export const ShareInfo = ({
             <div className="ml-4 flex-shrink-0">
               <button
                 className="mod-cta"
-                onClick={() => copyToClipboard(shareUrl)}
+                onClick={() => {
+                  void copyToClipboard(shareUrl);
+                }}
                 type="button"
               >
                 Copy URL

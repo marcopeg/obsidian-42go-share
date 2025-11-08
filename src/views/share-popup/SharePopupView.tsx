@@ -1,7 +1,7 @@
 import { useActiveTab } from "@/hooks/use-active-tab";
 import { useApp } from "@/hooks/use-app";
 import type { TFile } from "obsidian";
-import { Notice, MarkdownView } from "obsidian";
+import { Notice, MarkdownView, requestUrl } from "obsidian";
 import { useEffect, useState } from "react";
 import ShareInfo from "@/components/ShareInfo";
 import { useSettings } from "@/context/SettingsContext";
@@ -41,7 +41,7 @@ export const SharePopupView = ({
       };
     }
 
-    (async () => {
+    void (async () => {
       try {
         // Prefer editor buffer (unsaved changes) if the active view is a MarkdownView
         const activeView = app.workspace.getActiveViewOfType(MarkdownView);
@@ -55,7 +55,8 @@ export const SharePopupView = ({
         const text = await app.vault.read(activeFile);
         if (!mounted) return;
         setContent(text);
-      } catch (e) {
+      } catch (error) {
+        console.error("Unable to read the current note", error);
         new Notice("Unable to read the current note");
       }
     })();
@@ -85,14 +86,15 @@ export const SharePopupView = ({
     let mounted = true;
     if (!resultUrl || loading || autoCopied) return;
 
-    (async () => {
+    void (async () => {
       try {
         await navigator.clipboard.writeText(resultUrl);
         if (!mounted) return;
         // Show Obsidian notice
         new Notice("Share link copied to clipboard");
         setAutoCopied(true);
-      } catch (e) {
+      } catch (error) {
+        console.error("Failed to copy share link", error);
         new Notice("Failed to copy the share link to the clipboard");
       }
     })();
@@ -108,7 +110,7 @@ export const SharePopupView = ({
     // Only attempt when we have content and haven't already generated a URL
     if (!activeFile || content == null || resultUrl || loading) return;
 
-    (async () => {
+    void (async () => {
       setLoading(true);
       setError(null);
       try {
@@ -117,17 +119,17 @@ export const SharePopupView = ({
           body: content,
         });
         const base = settings.backendEndpoint.replace(/\/$/, "");
-        const res = await fetch(`${base}/api/notes`, {
+        const res = await requestUrl({
+          url: `${base}/api/notes`,
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body,
         });
         if (!mounted) return;
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(`HTTP ${res.status}: ${text}`);
+        if (res.status < 200 || res.status >= 300) {
+          throw new Error(`HTTP ${res.status}: ${res.text}`);
         }
-        const data: { bucket: string; uuid: string } = await res.json();
+        const data = res.json as { bucket: string; uuid: string };
         const url = `${base}/notes/${data.bucket}/${data.uuid}`;
         setResultUrl(url);
       } catch (e: unknown) {
@@ -141,7 +143,7 @@ export const SharePopupView = ({
     return () => {
       mounted = false;
     };
-  }, [activeFile, content, resultUrl]);
+  }, [activeFile, content, resultUrl, settings.backendEndpoint]);
 
   return (
     <div className="pt-2 px-4 pb-4">
